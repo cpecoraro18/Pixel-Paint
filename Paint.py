@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.ttk import *
+from tkinter.colorchooser import *
 import BitCanvas as bc
 
 class Paint():
@@ -12,62 +13,68 @@ class Paint():
         self.window.geometry('800x500')
 
  #--------------------File, edit, ect---------------------
+        self.menubar = Menu(self.window)
 
-        self.file = Menu(self.window)
-        self.new_item = Menu(self.file)
-        self.new_item.add_command(label='New')
-        self.file.add_cascade(label = 'File', menu = self.new_item)
-        self.window.config(menu=self.file)
+        self.file = Menu(self.menubar, tearoff=0)
+        self.file.add_command(label='New')
+        self.file.add_command(label="Open")
+        self.file.add_command(label="Save")
+        self.file.add_command(label="Save as")
+        self.file.add_separator()
+        self.file.add_command(label="Exit")
+        self.menubar.add_cascade(label='File', menu = self.file)
+        self.window.config(menu=self.menubar)
+
+        self.edit=Menu(self.menubar,tearoff=0)
+        self.edit.add_command(label="Undo")
+        self.edit.add_command(label="Copy")
+        self.edit.add_command(label="Paste")
+        self.menubar.add_cascade(label="Edit", menu=self.edit)
+
+        self.help=Menu(self.menubar,tearoff=0)
+        self.help.add_command(label="Help")
+        self.menubar.add_cascade(label="Help",menu=self.help)
 
  #--------------------Top Frame---------------------
         self.top_frame = Frame(self.window)
         self.top_frame.grid(column=0, row=0)
 
  #--------------------color selecting tool---------------------
-        self.color_selector = Combobox(self.top_frame)
-        self.color_selector['values'] = ("Black", "Red", "Blue", "Yellow")
-        self.color_selector.current(0)
+        self.color_selector = Button(self.top_frame, text='Select Color', command= lambda : self.changeColor(askcolor()[1]))
         self.color_selector.grid(column=0, row=0)
-
-        self.color_selector.bind("<<ComboboxSelected>>", self.changeColor)
+        self.mostRecentColor = self.DEFAULT_COLOR
 
  #--------------------tool buttons---------------------
-        self.draw_button = Button(self.top_frame, text="Draw", command = lambda : self.changeColor(None))
+        self.draw_button = Button(self.top_frame, text="Draw", command = lambda : self.changeColor(self.mostRecentColor))
         self.draw_button.grid(column=1, row=0)
         self.eraser_button = Button(self.top_frame, text="Eraser", command = self.setEraser)
         self.eraser_button.grid(column=2, row=0)
+
+#--------------------clear---------------------
+        self.clear_button = Button(self.top_frame, text="Clear", command = lambda : self.clear())
+        self.clear_button.grid(column=3, row=0)
+
+#--------------------undo---------------------
+        #self.undo_button = Button(self.top_frame, text="Clear", command = lambda : self.canvas.undo())
+        #self.undo_button.grid(column=4, row=0)
+
+
 
  #--------------------grid checkbox---------------------
         self.chk_state = BooleanVar()
         self.chk_state.set(True) #set check state
         self.show_grid = Checkbutton(self.top_frame, text='Show Grid', var=self.chk_state, command = self.checkGrid)
-        self.show_grid.grid(column=3, row=0)
+        self.show_grid.grid(column=5, row=0)
+
 
  #--------------------recent colors---------------------
         self.recent_colors = []
-        self.recent_color1text = StringVar()
-        self.recent_color1 = Button(self.top_frame, textvariable = self.recent_color1text,
-            command =lambda: self.selectRecent(self.recent_color1text))
-        self.recent_color1.grid(column=4, row=0)
-        self.recent_colors.append(self.recent_color1text)
-
-        self.recent_color2text = StringVar()
-        self.recent_color2 = Button(self.top_frame, textvariable = self.recent_color2text,
-            command =lambda: self.selectRecent(self.recent_color2text))
-        self.recent_color2.grid(column=5, row=0)
-        self.recent_colors.append(self.recent_color2text)
-
-        self.recent_color3text = StringVar()
-        self.recent_color3 = Button(self.top_frame, textvariable = self.recent_color3text,
-            command =lambda: self.selectRecent(self.recent_color3text))
-        self.recent_color3.grid(column=6, row=0)
-        self.recent_colors.append(self.recent_color3text)
-
-        self.recent_color4text = StringVar()
-        self.recent_color4 = Button(self.top_frame, textvariable = self.recent_color4text,
-            command =lambda: self.selectRecent(self.recent_color4text))
-        self.recent_color4.grid(column=7, row=0)
-        self.recent_colors.append(self.recent_color4text)
+        for i in range(4):
+            recent_color = Button(self.top_frame,
+                command =lambda: self.selectRecent(self))
+            recent_color.grid(column=6+i, row=0)
+            recent_color
+            self.recent_colors.append(recent_color)
 
  #--------------------tabs---------------------
         self.tab_control = Notebook(self.window)
@@ -84,24 +91,33 @@ class Paint():
     def setup(self):
         self.eraser = False
 
-    def changeColor(self, event):
-        for color in self.recent_colors:
-            if color.get() == "" or color.get() == self.color_selector.get():
-                color.set(self.color_selector.get())
-                break
-        self.canvas.setColor(self.color_selector.get())
+    def changeColor(self, color):
+        #for c in self.recent_colors:
+            #c.configure()
+            #if c.cget('bg') == "" or c.cget('bg') == color:
+                #c.set(color)
+                #break
+        self.canvas.setColor(color)
 
     def selectRecent(self, color):
-        self.canvas.setColor(color.get())
+        self.canvas.setColor(color)
 
     def setEraser(self):
-        self.canvas.setColor('White')
+        self.mostRecentColor = self.canvas.getColor()
+        self.canvas.setColor("White")
 
     def checkGrid(self):
         if self.chk_state.get() == True:
             self.canvas.drawGrid()
         else:
             self.canvas.removeGrid()
+
+    def saveAs(self):
+        self.canvas.getImage()
+
+    def clear(self):
+        self.canvas.clear(self.chk_state)
+
 
 def main():
     paint = Paint()
