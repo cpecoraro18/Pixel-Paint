@@ -2,6 +2,9 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter.colorchooser import *
 import BitCanvas as bc
+import io
+import os
+from PIL import Image
 
 class Paint():
     DEFAULT_COLOR = 'Black'
@@ -18,7 +21,7 @@ class Paint():
         self.file = Menu(self.menubar, tearoff=0)
         self.file.add_command(label='New')
         self.file.add_command(label="Open")
-        self.file.add_command(label="Save")
+        self.file.add_command(label="Save", command = self.save)
         self.file.add_command(label="Save as")
         self.file.add_separator()
         self.file.add_command(label="Exit")
@@ -58,14 +61,11 @@ class Paint():
         #self.undo_button = Button(self.top_frame, text="Clear", command = lambda : self.canvas.undo())
         #self.undo_button.grid(column=4, row=0)
 
-
-
  #--------------------grid checkbox---------------------
-        self.chk_state = BooleanVar()
-        self.chk_state.set(True) #set check state
-        self.show_grid = Checkbutton(self.top_frame, text='Show Grid', var=self.chk_state, command = self.checkGrid)
+        self.gridOn = IntVar()
+        self.gridOn.set(1)
+        self.show_grid = Checkbutton(self.top_frame, text='Show Grid', variable=self.gridOn, command = self.checkGrid)
         self.show_grid.grid(column=5, row=0)
-
 
  #--------------------recent colors---------------------
         self.recent_colors = []
@@ -107,7 +107,7 @@ class Paint():
         self.canvas.setColor("White")
 
     def checkGrid(self):
-        if self.chk_state.get() == True:
+        if self.gridOn.get() == 1:
             self.canvas.drawGrid()
         else:
             self.canvas.removeGrid()
@@ -115,8 +115,18 @@ class Paint():
     def saveAs(self):
         self.canvas.getImage()
 
+    def save(self):
+        bitmap = self.canvas.getImage()
+        bitmap.delete('grid')
+        ps = bitmap.postscript(colormode='color')
+        img = Image.open(io.BytesIO(ps.encode('utf-8')))
+        img.save('C:/Users/Chris/Documents/Paint/images/test.jpg', 'JPEG')
+        if self.gridOn.get() == 1:
+            self.canvas.drawGrid()
+
     def clear(self):
-        self.canvas.clear(self.chk_state)
+        self.canvas.clear(self.gridOn.get())
+
 
 
 def main():

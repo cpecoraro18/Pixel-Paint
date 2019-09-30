@@ -19,16 +19,17 @@ class BitCanvas():
 
         self.canvas.bind('<Button-1>', self.drawLine)
         self.canvas.bind('<B1-Motion>', self.drawLine)
+
         #--------------------coordinates for drawing lines---------------------
         self.old_x = None
         self.old_y = None
+
         #--------------------color---------------------
         self.color = self.DEFAULT_COLOR
+
         #--------------------eraser active---------------------
         self.eraser = False
-
         self.undoStack = []
-
         self.drawGrid()
 
     def drawLine(self, event):
@@ -57,7 +58,6 @@ class BitCanvas():
     def removeGrid(self):
         self.canvas.delete('grid')
 
-
     def setColor(self, color):
         if color == "White":
             eraser = True
@@ -69,11 +69,12 @@ class BitCanvas():
         return self.color
 
     def getImage(self):
-        return
+        return self.canvas
 
     def clear(self, gridOn):
         self.canvas.delete('all')
-        if gridOn:
+        print(gridOn)
+        if gridOn==1:
             self.drawGrid()
     def undo():
         x = self.stack.pop()
