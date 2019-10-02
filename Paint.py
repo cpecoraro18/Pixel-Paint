@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.ttk import *
 from tkinter.colorchooser import *
+from tkinter.filedialog import *
 import BitCanvas as bc
 import io
 import os
@@ -11,6 +12,8 @@ class Paint():
     BACKGROUND_COLOR = '#afeeee'
 
     def init(self):
+        self.filepath = "C:/Users/Chris/Documents/Paint/images/untitled"
+        self.filenameGiven = False
  #--------------------main window---------------------
         self.window = Tk()
         self.window.title("Pixel Paint")
@@ -26,10 +29,11 @@ class Paint():
         self.menubar = Menu(self.window)
 
         self.file = Menu(self.menubar, tearoff=0)
+
         self.file.add_command(label='New')
         self.file.add_command(label="Open")
         self.file.add_command(label="Save", command = self.save)
-        self.file.add_command(label="Save as")
+        self.file.add_command(label="Save as", command = self.saveAs)
         self.file.add_separator()
         self.file.add_command(label="Exit")
         self.menubar.add_cascade(label='File', menu = self.file)
@@ -85,7 +89,6 @@ class Paint():
         self.gridOn.set(0)
         self.show_grid = Checkbutton(self.top_frame, text='Grid', variable=self.gridOn, command = self.checkGrid)
         self.show_grid.grid(column=5, row=0)
-        print(self.show_grid.configure().keys())
 
  #--------------------recent colors---------------------
         self.recent_colors = []
@@ -112,11 +115,7 @@ class Paint():
         self.eraser = False
 
     def changeColor(self, color):
-        #for c in self.recent_colors:
-            #c.configure()
-            #if c.cget('bg') == "" or c.cget('bg') == color:
-                #c.set(color)
-                #break
+
         self.canvas.setColor(color)
 
     def selectRecent(self, color):
@@ -133,16 +132,27 @@ class Paint():
             self.canvas.removeGrid()
 
     def saveAs(self):
-        self.canvas.getImage()
-
-    def save(self):
         bitmap = self.canvas.getImage()
         bitmap.delete('grid')
         ps = bitmap.postscript(colormode='color')
         img = Image.open(io.BytesIO(ps.encode('utf-8')))
-        img.save('C:/Users/Chris/Documents/Paint/images/test.jpg', 'JPEG')
+        self.filepath = asksaveasfilename(initialdir = "C:/Users/Chris/Documents/Paint/images/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
+        img.save(self.filepath + ".jpg", 'JPEG')
+        self.filenameGiven = True
         if self.gridOn.get() == 1:
             self.canvas.drawGrid()
+
+    def save(self):
+        if(self.filenameGiven):
+            bitmap = self.canvas.getImage()
+            bitmap.delete('grid')
+            ps = bitmap.postscript(colormode='color')
+            img = Image.open(io.BytesIO(ps.encode('utf-8')))
+            img.save(self.filepath + ".jpg", 'JPEG')
+            if self.gridOn.get() == 1:
+                self.canvas.drawGrid()
+        else:
+            self.saveAs()
 
     def clear(self):
         self.canvas.clear(self.gridOn.get())
