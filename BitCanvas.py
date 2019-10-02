@@ -30,7 +30,6 @@ class BitCanvas():
         #--------------------eraser active---------------------
         self.eraser = False
         self.undoStack = []
-        self.drawGrid()
 
     def drawLine(self, event):
         #draws square based on clock event and grid
@@ -73,7 +72,6 @@ class BitCanvas():
 
     def clear(self, gridOn):
         self.canvas.delete('all')
-        print(gridOn)
         if gridOn==1:
             self.drawGrid()
     def undo():

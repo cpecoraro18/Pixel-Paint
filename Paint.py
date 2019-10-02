@@ -4,17 +4,24 @@ from tkinter.colorchooser import *
 import BitCanvas as bc
 import io
 import os
-from PIL import Image
+from PIL import Image, ImageTk
 
 class Paint():
     DEFAULT_COLOR = 'Black'
+    BACKGROUND_COLOR = '#afeeee'
 
     def init(self):
  #--------------------main window---------------------
         self.window = Tk()
-        self.window.title("Pixel Art")
-        self.window.geometry('800x500')
+        self.window.title("Pixel Paint")
+        self.window.geometry('600x550')
+        self.window.configure(background=self.BACKGROUND_COLOR)
+        self.window.columnconfigure(0, weight=1)
 
+
+        titlelabel = Label(self.window, text="Pixel Paint", foreground="black", background = 'white', font = ("Fixedsys", 24))
+        titlelabel.grid(row=0, column=0, sticky='ew')
+        titlelabel.configure(anchor=CENTER)
  #--------------------File, edit, ect---------------------
         self.menubar = Menu(self.window)
 
@@ -40,32 +47,45 @@ class Paint():
 
  #--------------------Top Frame---------------------
         self.top_frame = Frame(self.window)
-        self.top_frame.grid(column=0, row=0)
+        self.top_frame.grid(column=0, row=1)
 
  #--------------------color selecting tool---------------------
         self.color_selector = Button(self.top_frame, text='Select Color', command= lambda : self.changeColor(askcolor()[1]))
         self.color_selector.grid(column=0, row=0)
         self.mostRecentColor = self.DEFAULT_COLOR
+        image = Image.open("C:/Users/Chris/Documents/Paint/Button_Images/colorselect.jpg")
+        image = image.resize((25, 25), Image.ANTIALIAS)
+        colorimg= ImageTk.PhotoImage(image)
+        self.color_selector.configure(image=colorimg)
 
  #--------------------tool buttons---------------------
         self.draw_button = Button(self.top_frame, text="Draw", command = lambda : self.changeColor(self.mostRecentColor))
         self.draw_button.grid(column=1, row=0)
+        image = Image.open("C:/Users/Chris/Documents/Paint/Button_Images/Pencil.jpg")
+        image = image.resize((25, 25), Image.ANTIALIAS)
+        pencilimg= ImageTk.PhotoImage(image)
+        self.draw_button.configure(image=pencilimg)
         self.eraser_button = Button(self.top_frame, text="Eraser", command = self.setEraser)
         self.eraser_button.grid(column=2, row=0)
+        image = Image.open("C:/Users/Chris/Documents/Paint/Button_Images/Eraser.png")
+        image = image.resize((25, 25), Image.ANTIALIAS)
+        eraserimg= ImageTk.PhotoImage(image)
+        self.eraser_button.configure(image=eraserimg)
 
 #--------------------clear---------------------
         self.clear_button = Button(self.top_frame, text="Clear", command = lambda : self.clear())
         self.clear_button.grid(column=3, row=0)
-
-#--------------------undo---------------------
-        #self.undo_button = Button(self.top_frame, text="Clear", command = lambda : self.canvas.undo())
-        #self.undo_button.grid(column=4, row=0)
+        image = Image.open("C:/Users/Chris/Documents/Paint/Button_Images/clear.jpg")
+        image = image.resize((25, 25), Image.ANTIALIAS)
+        clearimg= ImageTk.PhotoImage(image)
+        self.clear_button.configure(image=clearimg)
 
  #--------------------grid checkbox---------------------
         self.gridOn = IntVar()
-        self.gridOn.set(1)
-        self.show_grid = Checkbutton(self.top_frame, text='Show Grid', variable=self.gridOn, command = self.checkGrid)
+        self.gridOn.set(0)
+        self.show_grid = Checkbutton(self.top_frame, text='Grid', variable=self.gridOn, command = self.checkGrid)
         self.show_grid.grid(column=5, row=0)
+        print(self.show_grid.configure().keys())
 
  #--------------------recent colors---------------------
         self.recent_colors = []
