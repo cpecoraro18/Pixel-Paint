@@ -1,9 +1,9 @@
 # Pixel-Paint
 
 ## Introduction
-Used Python and Tkinter to create a pixel paint application
+Used Python and Tkinter to create a pixel paint application with save and undo/redo functionalities.
 
-![app-pic](Images/PromoPic.png)
+![app-pic](images/PromoPic.png)
 
 ## Technologies
 Python
