@@ -6,5 +6,5 @@ Used Python and Tkinter to create a pixel paint application with save and undo/r
 ![app-pic](images/PromoPic.png)
 
 ## Technologies
-Python
+Python  
 Tkinter
