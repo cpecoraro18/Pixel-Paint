@@ -9,10 +9,10 @@ from PIL import Image, ImageTk
 
 class Paint():
     DEFAULT_COLOR = '#000000'
-    BACKGROUND_COLOR = '#afeeee'
+    BACKGROUND_COLOR = '#496D89'
 
     def init(self):
-        self.filepath = "C:/Users/Chris/Documents/Paint/images/untitled.jpg"
+        self.filepath = "images/untitled.jpg"
         self.filenameGiven = False
         self.filetype = "JPEG"
 
@@ -21,13 +21,19 @@ class Paint():
         self.window.title("Pixel Paint")
         self.window.geometry('600x550')
         self.window.configure(background=self.BACKGROUND_COLOR)
+        #image = Image.open("Button_Images/Background.png")
+        #image = image.resize((32, 32), Image.ANTIALIAS)
+        #backgroundimg= ImageTk.PhotoImage(image)
+        #bg = Image(master = self.window)
 
 
-        titlelabel = Label(self.window, text="Pixel Paint", foreground="black", background = 'white', font = ("Fixedsys", 24))
+        titlelabel = Label(self.window, text="Pixel Paint", foreground="black", background = '#D8E0E5', font = ("Fixedsys", 24))
         titlelabel.pack(side = "top", fill = "both")
 
-        self.top_frame = Frame(self.window, background = "light gray", highlightthickness = 1, highlightbackground="#E6DCDA")
-        self.bottom_frame = Frame(self.window, background = self.BACKGROUND_COLOR)
+
+
+        self.top_frame = Frame(self.window, background = "#D8E0E5", highlightthickness = 10, highlightbackground=self.BACKGROUND_COLOR, pady = 3)
+        self.bottom_frame = Frame(self.window, background = "#496D89")
         self.top_frame.pack(side="top", fill="x", expand=False)
         self.bottom_frame.pack(side="bottom", fill="both", expand=True)
  #--------------------File, edit, ect---------------------
@@ -54,33 +60,32 @@ class Paint():
         self.menubar.add_cascade(label="Help",menu=self.help)
 
  #--------------------color selecting tool---------------------
-        self.color_selector = Button(self.top_frame, text='Select Color', command= lambda : self.changeColor(askcolor()[1]), highlightthickness = 0, bd = 0, bg = "light gray")
-        self.color_selector.pack(side=LEFT, padx=10)
+        self.color_selector = Button(self.top_frame, command= lambda : self.changeColor(askcolor()[1]), highlightthickness = 1, highlightbackground="#D8E0E5", bg = "black", height = 2, width = 4)
+        self.color_selector.grid(row = 0, column = 0, padx = 10)
+        self.color_selector_text = Label(self.top_frame, text="Select Color", bg = "#D8E0E5")
+        self.color_selector_text.grid(row = 1, column = 0)
         self.mostRecentColor = self.DEFAULT_COLOR
         self.changedColor = False
-        image = Image.open("C:/Users/Chris/Documents/Paint/Button_Images/colorselect.jpg")
-        image = image.resize((32, 32), Image.ANTIALIAS)
-        colorimg= ImageTk.PhotoImage(image)
-        self.color_selector.configure(image=colorimg)
+
 
  #--------------------tool buttons---------------------
-        self.draw_button = Button(self.top_frame, text="Draw", command = lambda : self.changeColor(self.mostRecentColor), highlightthickness = 0, bd = 0, bg = "light gray")
-        self.draw_button.pack(side=LEFT, padx=3)
-        image = Image.open("C:/Users/Chris/Documents/Paint/Button_Images/Pencil.png")
+        self.draw_button = Button(self.top_frame, text="Draw", command = lambda : self.changeColor(self.mostRecentColor), highlightthickness = 0, bd = 0, bg = "#D8E0E5")
+        self.draw_button.grid(row = 0, column = 1, padx = 3)
+        image = Image.open("Button_Images/Pencil.png")
         image = image.resize((32, 32), Image.ANTIALIAS)
         pencilimg= ImageTk.PhotoImage(image)
         self.draw_button.configure(image=pencilimg)
-        self.eraser_button = Button(self.top_frame, text="Eraser", command = self.setEraser, highlightthickness = 0, bd = 0, bg = "light gray")
-        self.eraser_button.pack(side=LEFT, padx=3)
-        image = Image.open("C:/Users/Chris/Documents/Paint/Button_Images/Eraser.png")
+        self.eraser_button = Button(self.top_frame, text="Eraser", command = self.setEraser, highlightthickness = 0, bd = 0, bg = "#D8E0E5")
+        self.eraser_button.grid(row = 0, column = 2, padx = 3)
+        image = Image.open("Button_Images/Eraser.png")
         image = image.resize((32, 32), Image.ANTIALIAS)
         eraserimg= ImageTk.PhotoImage(image)
         self.eraser_button.configure(image=eraserimg)
 
 #--------------------clear---------------------
-        self.clear_button = Button(self.top_frame, text="Clear", command = lambda : self.clear(), highlightthickness = 0, bd = 0, bg = "light gray")
-        self.clear_button.pack(side=LEFT, padx=3)
-        image = Image.open("C:/Users/Chris/Documents/Paint/Button_Images/Clear.png")
+        self.clear_button = Button(self.top_frame, text="Clear", command = lambda : self.clear(), highlightthickness = 0, bd = 0, bg = "#D8E0E5")
+        self.clear_button.grid(row = 0, column = 3, padx = 5)
+        image = Image.open("Button_Images/Clear.png")
         image = image.resize((32, 32), Image.ANTIALIAS)
         clearimg= ImageTk.PhotoImage(image)
         self.clear_button.configure(image=clearimg)
@@ -88,33 +93,34 @@ class Paint():
  #--------------------grid checkbox---------------------
         self.gridOn = IntVar()
         self.gridOn.set(0)
-        self.show_grid = Checkbutton(self.top_frame, text='Grid', variable=self.gridOn, command = self.checkGrid, bg = "light gray")
-        self.show_grid.pack(side=LEFT, padx=10)
+        self.show_grid = Checkbutton(self.top_frame, text='Grid', variable=self.gridOn, command = self.checkGrid, bg = "#D8E0E5")
+        self.show_grid.grid(row = 0, column = 4, padx = 20)
 
  #--------------------recent colors---------------------
         self.recent_colors = []
         recent_color1 = Button(self.top_frame,
             command =lambda: self.selectRecent(recent_color1), height = 1, width = 2)
-        recent_color1.pack(side=LEFT, padx=5)
+        recent_color1.grid(row = 0, column = 5, padx = 4)
         self.recent_colors.append(recent_color1)
         recent_color2 = Button(self.top_frame,
             command =lambda: self.selectRecent(recent_color2), height = 1, width = 2)
-        recent_color2.pack(side=LEFT, padx=5)
+        recent_color2.grid(row = 0, column = 6, padx = 4)
         self.recent_colors.append(recent_color2)
         recent_color3 = Button(self.top_frame,
             command =lambda: self.selectRecent(recent_color3), height = 1, width = 2)
-        recent_color3.pack(side=LEFT, padx=5)
+        recent_color3.grid(row = 0, column = 7, padx = 4)
         self.recent_colors.append(recent_color3)
         recent_color4 = Button(self.top_frame,
             command =lambda: self.selectRecent(recent_color4), height = 1, width = 2)
-        recent_color4.pack(side=LEFT, padx=5)
+        recent_color4.grid(row = 0, column = 8, padx = 4)
         self.recent_colors.append(recent_color4)
 
  #--------------------tabs---------------------
         self.tab_control = Notebook(self.bottom_frame)
-        self.tab1 = Frame(self.tab_control)
+        self.tab1 = Frame(self.tab_control, bg = "#D8E0E5",  width=500, height=400, highlightthickness = 0, borderwidth = 0, bd = 0, relief='ridge')
         self.tab_control.add(self.tab1, text='First')
-        self.tab_control.pack(side=LEFT, anchor="nw")
+        self.tab_control.place(relx=.5, rely=.5, anchor="center")
+
 
 #--------------------canvas---------------------
         self.canvas = bc.BitCanvas()
@@ -126,6 +132,7 @@ class Paint():
         self.eraser = False
 
     def changeColor(self, color):
+        self.color_selector.config(bg = color)
         #if color selected is already the color, do nothing
         if(color == self.canvas.getColor()):
             return

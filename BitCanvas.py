@@ -5,6 +5,7 @@ import math
 
 class BitCanvas():
     BACKGROUND_COLOR = 'white'
+    TOP_COLOR = '#0ADEF7'
     DEFAULT_COLOR = '#000000'
     CANVAS_WIDTH = 500
     CANVAS_HEIGHT = 400
@@ -15,9 +16,9 @@ class BitCanvas():
 
     def init(self, tab):
         #--------------------main canvas---------------------
-        self.canvas = Canvas(tab, width = self.CANVAS_WIDTH, height = self.CANVAS_HEIGHT)
+        self.canvas = Canvas(tab, width = self.CANVAS_WIDTH, height = self.CANVAS_HEIGHT, bg = "black" )
         self.canvas.configure(background=self.BACKGROUND_COLOR)
-        self.canvas.pack(side=LEFT)
+        self.canvas.place(relx=.5, rely=.5, anchor="center")
 
         self.canvas.bind('<Button-1>', self.drawLine)
         self.canvas.bind('<B1-Motion>', self.drawLine)
