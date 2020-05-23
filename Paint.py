@@ -158,7 +158,14 @@ class Paint():
         self.recent_colors[0].configure(bg = color)
 
     def selectRecent(self, recentcolor):
+        oldColor = self.mostRecentColor
+
         self.canvas.setColor(recentcolor.cget('bg'))
+        self.mostRecentColor = recentcolor.cget('bg')
+        self.color_selector.config(bg = recentcolor.cget('bg'))
+
+        self.addColortoRecents(oldColor)
+
 
     def setEraser(self):
         self.mostRecentColor = self.canvas.getColor()
