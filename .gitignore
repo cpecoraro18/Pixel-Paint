@@ -1,6 +1,7 @@
 # Don't track content of these folders
 Debug/
 .git/
+_pycache_/
 
 
 # Compiled source #
